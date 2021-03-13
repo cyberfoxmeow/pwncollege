@@ -124,7 +124,7 @@ RUN ln -sf /opt/pwn-college/.tmux.conf /root/.tmux.conf
 RUN ln -sf /opt/pwn-college/.gdbinit /root/.gdbinit
 RUN ln -sf /opt/pwn-college/.radare2rc /root/.radare2rc
 
-RUN echo 'pwn_college{missing}' > /flag
+RUN echo 'sutd_syssec{missing}' > /flag
 RUN chmod 400 /flag
 
 RUN find / -type f -perm -4000 | xargs -r chmod u-s

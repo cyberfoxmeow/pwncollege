@@ -255,10 +255,11 @@ class RunDocker(Resource):
                 \""""
             )
 
-        flag = f"pwn_college{{{flag}}}"
+        flag = f"sutd_syssec{{{flag}}}"
         container.exec_run(f"/bin/sh -c \"echo '{flag}' > /flag\"")
 
-        return {"success": True, "ssh": f"ssh {INSTANCE}@{INSTANCE}.pwn.college"}
+        # return {"success": True, "ssh": f"ssh {INSTANCE}@{INSTANCE}.pwn.college"}
+        return {"success": True, "ssh": f"ssh {INSTANCE}@ the url of this host"}
 
     @authed_only
     def get(self):

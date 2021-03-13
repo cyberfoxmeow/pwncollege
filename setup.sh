@@ -44,9 +44,9 @@ COMPOSE_PROJECT_NAME=$INSTANCE
 PWN_COLLEGE_INSTANCE=$INSTANCE
 HOST_DATA_PATH=$DIR/.data
 SECRET_KEY=$(openssl rand -hex 16)
-VIRTUAL_HOST=${INSTANCE}.pwn.college
+VIRTUAL_HOST=127.0.0.1
 VIRTUAL_PORT=8000
-LETSENCRYPT_HOST=${INSTANCE}.pwn.college
+LETSENCRYPT_HOST=127.0.0.1
 EOF
 fi
 
@@ -60,7 +60,7 @@ mkdir -p $DIR/.data/homes/nosuid
 for i in $(seq 0 $NUM_USERS); do
     if [ ! -d $DIR/.data/homes/data/$i ]; then
 	cp -r /etc/skel $DIR/.data/homes/data/$i
-	chown -R ubuntu:ubuntu $DIR/.data/homes/data/$i
+	chown -R qwertyu:qwertyu $DIR/.data/homes/data/$i
     fi
     if [ ! -d $DIR/.data/homes/nosuid/$i ]; then
 	mkdir -p $DIR/.data/homes/nosuid/$i

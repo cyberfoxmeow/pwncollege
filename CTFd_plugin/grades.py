@@ -5,6 +5,7 @@ from CTFd.models import db, Challenges, Solves, Awards, Users
 from CTFd.utils.user import get_current_user, is_admin
 from CTFd.utils.decorators import authed_only, admins_only
 
+from CTFd.models import Teams
 
 grades = Blueprint("grades", __name__, template_folder="assets/grades/")
 
@@ -41,15 +42,15 @@ def compute_grades(user_id, when=None):
 
     challenges = (
         db.session.query(Challenges.category, db.func.count())
-        .filter(Challenges.state == "visible")
-        .filter(Challenges.value > 0)
-        .group_by(Challenges.category)
+            .filter(Challenges.state == "visible")
+            .filter(Challenges.value > 0)
+            .group_by(Challenges.category)
     )
     for category, num_available in challenges:
         solves = (
             Solves.query.filter_by(user_id=user_id)
-            .join(Challenges)
-            .filter(Challenges.category == category)
+                .join(Challenges)
+                .filter(Challenges.category == category)
         )
 
         if when:
@@ -84,15 +85,20 @@ def compute_grades(user_id, when=None):
     max_time = datetime.datetime.max
     grades.sort(key=lambda k: (deadlines.get(k["category"], max_time), k["category"]))
 
-    weighted_grades = [g["grade"] for g in grades if g["category"] != "babyauto"]
+    # weighted_grades = [g["grade"] for g in grades if g["category"] != "babyauto"]
+    weighted_grades = [g["grade"] for g in grades]
     makeup_grade = average(makeup_grades)
     weighted_grades += [makeup_grade] * len(weighted_grades)
     overall_grade = average(weighted_grades)
+    """
     overall_grade += (
         next(g["grade"] for g in grades if g["category"] == "babyauto") * 0.10
     )
+    """
 
     num_awards = Awards.query.filter_by(user_id=user_id).count()
+
+    """
     extra_credit = num_awards * 0.01
     grades.append(
         {
@@ -112,6 +118,17 @@ def compute_grades(user_id, when=None):
             "grade": makeup_grade,
         }
     )
+
+
+    grades.append(
+        {
+            "category": "",
+            "due": "",
+            "completed": f"",
+            "grade": None,
+        }
+    )
+    """
 
     grades.append(
         {
@@ -142,7 +159,10 @@ def view_grades():
     grades = compute_grades(user_id, when)
 
     for grade in grades:
-        grade["grade"] = f'{grade["grade"] * 100.0:.2f}%'
+        if (grade["grade"] != None):
+            grade["grade"] = f'{grade["grade"] * 100.0:.2f}%'
+        else:
+            grade["grade"] = ''
 
     return render_template("grades.html", grades=grades)
 
@@ -166,13 +186,15 @@ def view_all_grades():
             "id": user_id,
             "overall": [
                 e["grade"] for e in category_grades if e["category"] == "overall"
-            ][0],
-            "makeup": [
-                e["grade"] for e in category_grades if e["category"] == "makeup"
-            ][0],
-            "extra": [e["grade"] for e in category_grades if e["category"] == "extra"][
-                0
-            ],
+            ][0]  # ,
+            # "makeup": [
+            #    e["grade"] for e in category_grades if e["category"] == "makeup"
+            # ][0],
+            # "extra": [e["grade"] for e in category_grades if e["category"] == "extra"][
+            #    0
+            # ]
+            # ,
+
         }
         for category_grade in category_grades:
             category = category_grade["category"]
