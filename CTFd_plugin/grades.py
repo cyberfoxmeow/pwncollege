@@ -182,6 +182,7 @@ def view_all_grades():
         category_grades = compute_grades(user_id, when)
         user = Users.query.filter_by(id=user_id).first()
         user_grades = {
+            "username": user.name,
             "email": user.email,
             "id": user_id,
             "overall": [
@@ -206,30 +207,30 @@ def view_all_grades():
 
     statistics = []
 
-    average_grades = {"email": "average", "id": ""}
+    average_grades = {"username": "average","email": "average", "id": ""}
     for key in user_grades:
         if key not in average_grades:
             average_grades[key] = []
     for user_grades in grades:
         for key, value in user_grades.items():
-            if key in ["email", "id"]:
+            if key in ["username","email", "id"]:
                 continue
             average_grades[key].append(value)
     for key, value in average_grades.items():
-        if key in ["email", "id"]:
+        if key in ["username","email", "id"]:
             continue
         average_grades[key] = average(value)
     statistics.append(average_grades)
 
     for user_grades in grades:
         for key, value in user_grades.items():
-            if key in ["email", "id"]:
+            if key in ["username","email", "id"]:
                 continue
             user_grades[key] = f"{value * 100.0:.2f}%"
 
     for statistic in statistics:
         for key, value in statistic.items():
-            if key in ["email", "id"]:
+            if key in ["username","email", "id"]:
                 continue
             statistic[key] = f"{value * 100.0:.2f}%"
 
