@@ -175,7 +175,15 @@ def view_all_grades():
         when = datetime.datetime.fromtimestamp(int(when))
 
     # TODO: this is the class student ids, should probably exist in a db
-    students = [1]
+    students = []
+
+    grades_users_all = Users.query.all()
+    #print(grades_users_all, type(grades_users_all))
+    for user_a in grades_users_all:
+        #print(user_a, type(user_a))
+        #print(user_a.id)
+        students.append(user_a.id)
+
 
     grades = []
     for user_id in students:
