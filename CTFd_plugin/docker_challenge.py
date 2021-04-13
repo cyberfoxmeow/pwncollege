@@ -92,7 +92,7 @@ class RunDocker(Resource):
         category = challenge.category
         challenge = challenge.name
 
-        if category == "babysuid":
+        if category == "babysuid" or category == "suid":
             # TODO: make babysuid not so hacked in
             selected_path = data.get("selected_path")
 
@@ -191,7 +191,7 @@ class RunDocker(Resource):
 
         extra_data = None
 
-        if category == "babysuid":
+        if category == "babysuid" or category == "suid" :
             # TODO: make babysuid not so hacked in
 
             # No command injection please
